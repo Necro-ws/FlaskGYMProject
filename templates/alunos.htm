@@ -1,0 +1,39 @@
+{% extends 'base.htm' %}
+
+{% block pesquisa %}
+<form class="d-flex" role="search" action="{{url_for('alunos')}}" method="post">
+    <input class="form-control me-2" type="search" aria-label="Search" name="pesquisa">
+    <button class="btn btn-outline-success" type="submit">Pesquisar</button>
+</form>
+{% endblock%}
+
+{% block main %}
+<div class="container">
+    <br>
+    <div class="d-flex justify-content-center">
+        <h1>Alunos</h1>
+    </div>
+    <hr>
+    <div class="row">
+        {% for aluno in lista_alunos %}
+        <div class="col md-3">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{aluno.nome}}</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">Id: {{aluno.id}}</h6>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">Idade: {{aluno.idade}} - Peso: {{aluno.peso}} -
+                        Altura: {{aluno.altura}}</h6>
+                    <p class="card-text">{{aluno.objetivo}}</p>
+                    <a href="{{url_for('fichas_alunos', id=aluno.id)}}" class="bnt btn-primary">Ficha Aluno</a>
+                    <a href="{{url_for('editar_dados', id=aluno.id)}}" class="bnt btn-warning">Editar dados</a> <br>
+                    <a href="{{url_for('deletar_dados', id=aluno.id)}}"
+                        onclick="return confirm('Deseja apagar os dados desse aluno?')" class="bnt btn-danger">Apagar
+                        dados</a>
+                </div>
+            </div>
+            <br>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

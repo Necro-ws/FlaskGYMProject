@@ -1,0 +1,17 @@
+# Pastas de ambiente virtual
+venv/
+.venv/
+Include/
+Lib/
+Scripts/
+
+# Arquivos de banco de dados SQLite (geralmente não são versionados)
+*.db
+instance/*.db
+
+# Arquivos de cache do Python
+__pycache__/
+*.pyc
+
+# Variáveis de ambiente
+.env
