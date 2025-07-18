@@ -1,84 +1,96 @@
-Sistema de Gestão de Alunos e Fichas de Treino
-
-
+Sistema de Gestão de Academia
 Descrição Breve
-Este é um aplicativo web desenvolvido com Flask e Flask-SQLAlchemy para gerenciar dados de alunos e suas respectivas fichas de treino (A, B e C). Ele permite cadastrar novos alunos com suas informações pessoais e objetivos, atribuir exercícios e séries/repetições para cada ficha, e visualizar, editar ou remover esses dados.
+Este é um aplicativo web desenvolvido com Flask para a gestão completa de alunos e fichas de treino em uma academia. O sistema conta com um robusto sistema de autenticação que diferencia usuários em dois níveis: Administradores e Alunos, garantindo que cada um tenha acesso apenas às funcionalidades permitidas.
 
-Recursos
-Cadastro de Alunos: Adicione novos alunos com nome, idade, peso, altura e objetivo.
+Recursos Principais
+Sistema de Autenticação e Segurança
+Login Seguro: Autenticação de usuários baseada em email e senha.
 
-Gestão de Fichas de Treino: Crie e associe fichas de treino A, B e C para cada aluno, incluindo até 8 exercícios por ficha e suas respectivas séries e repetições.
+Hashing de Senhas: As senhas são armazenadas de forma segura no banco de dados usando hashes, nunca em texto plano.
 
-Visualização de Alunos: Liste todos os alunos cadastrados e pesquise por nome.
+Sessões de Usuário: Gerenciamento de sessões para manter o usuário logado de forma segura.
 
-Visualização de Fichas: Acesse as fichas de treino detalhadas de cada aluno.
+Interface Dinâmica: A barra de navegação e as opções disponíveis se adaptam de acordo com o tipo de usuário logado (visitante, aluno ou admin).
 
-Edição de Dados: Atualize informações de alunos e suas fichas de treino.
+Permissões de Administrador (Admin)
+Visão Geral: Acesso completo a todos os dados do sistema.
 
-Exclusão de Dados: Remova registros de alunos e suas fichas associadas.
+Gerenciamento de Alunos: Pode cadastrar, visualizar, editar e excluir qualquer aluno.
 
-Persistência de Dados: Utiliza SQLite como banco de dados para armazenar todas as informações.
+Gerenciamento de Fichas: Cria e edita as fichas de treino (A, B, C) para todos os alunos.
 
-Como Instalar
+Pesquisa: Ferramenta de busca para encontrar alunos rapidamente.
+
+Permissões de Aluno
+Acesso Restrito: Um aluno só pode visualizar e interagir com seus próprios dados.
+
+Visualização de Ficha: Acesso direto à sua ficha de treino detalhada após o login.
+
+Edição de Dados: Permissão para editar suas próprias informações pessoais e de treino.
+
+Como Instalar e Executar
 Siga os passos abaixo para configurar e executar o projeto em sua máquina local.
 
 Pré-requisitos
-Python 3.x (recomenda-se Python 3.8 ou superior)
+Python 3.8 ou superior
 
 pip (gerenciador de pacotes do Python)
 
-Passos de Instalação
-Clone o repositório:
-
+1. Clone o Repositório
 git clone https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git
 cd SEU_REPOSITORIO
 
-(Lembre-se de substituir SEU_USUARIO e SEU_REPOSITORIO pelos seus dados reais no GitHub).
+(Lembre-se de substituir SEU_USUARIO e SEU_REPOSITORIO)
 
-Crie e ative um ambiente virtual:
-É altamente recomendado usar um ambiente virtual para isolar as dependências do projeto.
+2. Crie e Ative um Ambiente Virtual
+É altamente recomendado usar um ambiente virtual para isolar as dependências.
 
 No Windows:
 
 python -m venv venv
 .\venv\Scripts\activate
 
-Se você encontrar um erro ao ativar o ambiente virtual no PowerShell (.ps1), pode ser necessário ajustar a Política de Execução. Abra o PowerShell como Administrador e execute Set-ExecutionPolicy RemoteSigned. Confirme com S ou Y.
-
 No macOS/Linux:
 
 python3 -m venv venv
 source venv/bin/activate
 
-Instale as dependências:
-Com o ambiente virtual ativado, instale todas as bibliotecas necessárias usando o requirements.txt:
+3. Instale as Dependências
+Com o ambiente virtual ativado, instale todas as bibliotecas necessárias:
 
 pip install -r requirements.txt
 
-Como Executar
-Após a instalação, você pode iniciar o aplicativo Flask:
+4. Crie o Primeiro Usuário Administrador (Passo Obrigatório)
+Como agora apenas administradores podem criar novos usuários, o primeiro admin precisa ser criado manualmente. Use o script fornecido para isso.
 
-Certifique-se de que seu ambiente virtual está ativado.
+No terminal, com o ambiente virtual ativado, execute:
 
-No diretório raiz do projeto, execute:
+python create_admin.py
 
-python app.py
+O script pedirá que você digite um email e uma senha para o novo administrador. Siga as instruções. Este comando também criará o arquivo de banco de dados datasave.db na primeira vez.
 
-O servidor Flask será iniciado e você poderá acessá-lo em seu navegador, geralmente em http://127.0.0.1:5000/.
+5. Execute a Aplicação
+Após criar o admin, inicie o servidor Flask:
+
+python run.py
+
+O servidor será iniciado! Acesse em seu navegador o endereço http://127.0.0.1:5000/. Use as credenciais do admin que você acabou de criar para fazer o login.
 
 Tecnologias Usadas
 Backend:
 
 Flask: Micro-framework web para Python.
 
-Flask-SQLAlchemy: Extensão Flask para SQLAlchemy, um ORM (Object Relational Mapper).
+Flask-SQLAlchemy: Extensão para manipulação do banco de dados com ORM.
+
+Flask-Login: Gerenciamento de sessões de usuário e autenticação.
+
+Werkzeug: Para hashing seguro de senhas.
 
 SQLite: Banco de dados leve e baseado em arquivo.
 
-Frontend (HTML/CSS/JS):
+Frontend:
 
-HTML: Para a estrutura das páginas.
+HTML5 com Jinja2 para templates dinâmicos.
 
-CSS: Para estilização (assumindo que você usa CSS para os templates).
-
-JavaScript: Para interatividade (se aplicável nos seus templates).
+Bootstrap 5: Framework CSS para estilização e responsividade.
