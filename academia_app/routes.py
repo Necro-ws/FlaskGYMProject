@@ -1,52 +1,95 @@
-from flask import render_template, request, redirect
-from . import db
+from flask import render_template, request, redirect, Blueprint, url_for, abort
+from academia_app import db
 from .models import Dados_alunos, Ficha_A, Serie_Reps_A, Ficha_B, Serie_Reps_B, Ficha_C, Serie_Reps_C
 from flask import current_app as app
+from flask_login import login_user, logout_user, login_required, current_user
 
 @app.route("/")
 def home():
     return render_template("index.htm")
 
-@app.route("/alunos", methods=['GET', 'POST'])
-def alunos():
-    if request.method == "POST":
-        termo = request.form["pesquisa"]
-        resultado = db.session.execute(db.select(Dados_alunos).filter(Dados_alunos.nome.like(f"%{termo}%"))).scalars()
-        return render_template("alunos.htm", lista_alunos=resultado)
-    else:
-        lista_alunos = db.session.execute(db.select(Dados_alunos)).scalars()
-        return render_template("alunos.htm", lista_alunos=lista_alunos)
-    
-@app.route("/ficha/<int:id>", methods=["GET", "POST"])
-def fichas_alunos(id):
-    if request.method == "POST":
-        pass
-    else:
-        ficha_aluno_a = db.session.execute(db.select(Ficha_A).filter(Ficha_A.id == id)).scalar()
-        serie_rep_a = db.session.execute(db.select(Serie_Reps_A).filter(Serie_Reps_A.id == id)).scalar()
-        ficha_aluno_b = db.session.execute(db.select(Ficha_B).filter(Ficha_B.id == id)).scalar()
-        serie_rep_b = db.session.execute(db.select(Serie_Reps_B).filter(Serie_Reps_B.id == id)).scalar()
-        ficha_aluno_c = db.session.execute(db.select(Ficha_C).filter(Ficha_C.id == id)).scalar()
-        serie_rep_c = db.session.execute(db.select(Serie_Reps_C).filter(Serie_Reps_C.id == id)).scalar()
+@app.route("/login", methods=["POST"])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('alunos'))
 
-        return render_template("ficha.htm", ficha_aluno_a=ficha_aluno_a, serie_rep_a=serie_rep_a,
-                                            ficha_aluno_b=ficha_aluno_b, serie_rep_b=serie_rep_b,
-                                            ficha_aluno_c=ficha_aluno_c, serie_rep_c=serie_rep_c)
+    email = request.form.get("email")
+    password = request.form.get("password")
+    
+    user = Dados_alunos.query.filter_by(email=email).first()
+
+    if user and user.check_password(password):
+        login_user(user)
+        return redirect(url_for('alunos'))
+    else:
+        status = {"type": "erro", "message": "Email ou senha inválidos."}
+        return render_template('index.htm', status=status)
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return render_template('index.htm')
+
+@app.route("/alunos", methods=['GET', 'POST'])
+@login_required
+def alunos():
+    if current_user.role == 'admin':
+        if request.method == "POST":
+            termo = request.form["pesquisa"]
+            resultado = Dados_alunos.query.filter(Dados_alunos.nome.ilike(f'%{termo}%')).all()
+            return render_template("alunos.htm", lista_alunos=resultado)
+        else:
+            lista_alunos = Dados_alunos.query.all()
+            return render_template("alunos.htm", lista_alunos=lista_alunos)
+    else:
+        return redirect(url_for('fichas_alunos', id=current_user.id))
+    
+@app.route("/ficha/<int:id>")
+@login_required
+def fichas_alunos(id):
+    if current_user.role != 'admin' and current_user.id != id:
+        abort(403)
+
+    ficha_aluno_a = Ficha_A.query.filter_by(user_id=id).first()
+    serie_rep_a = Serie_Reps_A.query.filter_by(user_id=id).first()
+    ficha_aluno_b = Ficha_B.query.filter_by(user_id=id).first()
+    serie_rep_b = Serie_Reps_B.query.filter_by(user_id=id).first()
+    ficha_aluno_c = Ficha_C.query.filter_by(user_id=id).first()
+    serie_rep_c = Serie_Reps_C.query.filter_by(user_id=id).first()
+
+    return render_template("ficha.htm", 
+                           ficha_aluno_a=ficha_aluno_a, serie_rep_a=serie_rep_a,
+                           ficha_aluno_b=ficha_aluno_b, serie_rep_b=serie_rep_b,
+                           ficha_aluno_c=ficha_aluno_c, serie_rep_c=serie_rep_c)
     
 @app.route("/cadastro", methods=['GET', 'POST'])
+@login_required
 def cadastrar_aluno():
-    if request.method == "POST":
+    if current_user.role != 'admin':
+        abort(403)
+
+    if request.method == 'POST':
         dados = request.form
-        status = {"type": "sucesso", "message": f"O Aluno foi cadastrado com sucesso!"}
+        status = {"type": "sucesso", "message": "O Aluno foi cadastrado com sucesso!"}
         try:
-            aluno = Dados_alunos(dados["nome"], dados["idade"], dados["peso"], dados["altura"], dados["objetivo"])
-            ficha_a = Ficha_A(dados["ex_1_a"], dados["ex_2_a"], dados["ex_3_a"], dados["ex_4_a"], dados["ex_5_a"], dados["ex_6_a"], dados["ex_7_a"], dados["ex_8_a"])
-            serie_rep_a = Serie_Reps_A(dados["series_a"], dados["repeticoes_a"])
-            ficha_b = Ficha_B(dados["ex_1_b"], dados["ex_2_b"], dados["ex_3_b"], dados["ex_4_b"], dados["ex_5_b"], dados["ex_6_b"], dados["ex_7_b"], dados["ex_8_b"])
-            serie_rep_b = Serie_Reps_B(dados["series_b"], dados["repeticoes_b"])
-            ficha_c = Ficha_C(dados["ex_1_c"], dados["ex_2_c"], dados["ex_3_c"], dados["ex_4_c"], dados["ex_5_c"], dados["ex_6_c"], dados["ex_7_c"], dados["ex_8_c"])
-            serie_rep_c = Serie_Reps_C(dados["series_c"], dados["repeticoes_c"])
+            aluno = Dados_alunos(nome=dados['nome'], email=dados['email'], idade=dados['idade'],
+                                 peso=dados['peso'], altura=dados['altura'], objetivo=dados['objetivo'],
+                                 role='aluno')
+            
+            aluno.set_password(dados['senha'])
             db.session.add(aluno)
+            db.session.commit()
+
+            ficha_a = Ficha_A(user_id=aluno.id, ex_1=dados.get("ex_1_a"), ex_2=dados.get("ex_2_a"), ex_3=dados.get("ex_3_a"), ex_4=dados.get("ex_4_a"), ex_5=dados.get("ex_5_a"), ex_6=dados.get("ex_6_a"), ex_7=dados.get("ex_7_a"), ex_8=dados.get("ex_8_a"))
+            serie_rep_a = Serie_Reps_A(user_id=aluno.id, serie_A=dados.get("series_a"), repeticoes_A=dados.get("repeticoes_a"))
+
+            ficha_b = Ficha_B(user_id=aluno.id, ex_1=dados.get("ex_1_b"), ex_2=dados.get("ex_2_b"), ex_3=dados.get("ex_3_b"), ex_4=dados.get("ex_4_b"), ex_5=dados.get("ex_5_b"), ex_6=dados.get("ex_6_b"), ex_7=dados.get("ex_7_b"), ex_8=dados.get("ex_8_b"))
+            serie_rep_b = Serie_Reps_B(user_id=aluno.id, serie_B=dados.get("series_b"), repeticoes_B=dados.get("repeticoes_b"))
+            
+            ficha_c = Ficha_C(user_id=aluno.id, ex_1=dados.get("ex_1_c"), ex_2=dados.get("ex_2_c"), ex_3=dados.get("ex_3_c"), ex_4=dados.get("ex_4_c"), ex_5=dados.get("ex_5_c"), ex_6=dados.get("ex_6_c"), ex_7=dados.get("ex_7_c"), ex_8=dados.get("ex_8_c"))
+            serie_rep_c = Serie_Reps_C(user_id=aluno.id, serie_C=dados.get("series_c"), repeticoes_C=dados.get("repeticoes_c"))
+
             db.session.add(ficha_a)
             db.session.add(serie_rep_a)
             db.session.add(ficha_b)
@@ -54,23 +97,30 @@ def cadastrar_aluno():
             db.session.add(ficha_c)
             db.session.add(serie_rep_c)
             db.session.commit()
-        except:
-            status = {"type": "erro", "message": f"Falha ao tentatar cadastrar os dados do aluno."}
+        except Exception as e:
+            db.session.rollback()
+            status = {"type": "erro", "message": f"Falha ao tentar cadastrar os dados do aluno: {e}"}
+        
         return render_template("cadastro.htm", status=status)
     else:
         return render_template("cadastro.htm")
     
 @app.route("/editar_dados/<int:id>", methods=["GET", "POST"])
+@login_required
 def editar_dados(id):
-    if request.method == "POST":
+    if current_user.role != 'admin' and current_user.id != id:
+        abort(403)
+
+    if request.method == 'POST':
         dados_editados = request.form
-        aluno = db.session.execute(db.select(Dados_alunos).filter(Dados_alunos.id == id)).scalar()
-        ficha_a = db.session.execute(db.select(Ficha_A).filter(Ficha_A.id == id)).scalar()
-        serie_rep_a = db.session.execute(db.select(Serie_Reps_A).filter(Serie_Reps_A.id == id)).scalar()
-        ficha_b = db.session.execute(db.select(Ficha_B).filter(Ficha_B.id == id)).scalar()
-        serie_rep_b = db.session.execute(db.select(Serie_Reps_B).filter(Serie_Reps_B.id == id)).scalar()
-        ficha_c = db.session.execute(db.select(Ficha_C).filter(Ficha_C.id == id)).scalar()
-        serie_rep_c = db.session.execute(db.select(Serie_Reps_C).filter(Serie_Reps_C.id == id)).scalar()
+        
+        aluno = Dados_alunos.query.get(id)
+        ficha_a = Ficha_A.query.filter_by(user_id=id).first()
+        serie_rep_a = Serie_Reps_A.query.filter_by(user_id=id).first()
+        ficha_b = Ficha_B.query.filter_by(user_id=id).first()
+        serie_rep_b = Serie_Reps_B.query.filter_by(user_id=id).first()
+        ficha_c = Ficha_C.query.filter_by(user_id=id).first()
+        serie_rep_c = Serie_Reps_C.query.filter_by(user_id=id).first()
 
         aluno.nome = dados_editados["nome"]
         aluno.idade = dados_editados["idade"]
@@ -118,34 +168,38 @@ def editar_dados(id):
         return redirect("/alunos")
 
     else:
-        dados_aluno = db.session.execute(db.select(Dados_alunos).filter(Dados_alunos.id == id)).scalar()
-        ficha_aluno_a = db.session.execute(db.select(Ficha_A).filter(Ficha_A.id == id)).scalar()
-        serie_rep_a = db.session.execute(db.select(Serie_Reps_A).filter(Serie_Reps_A.id == id)).scalar()
-        ficha_aluno_b = db.session.execute(db.select(Ficha_B).filter(Ficha_B.id == id)).scalar()
-        serie_rep_b = db.session.execute(db.select(Serie_Reps_B).filter(Serie_Reps_B.id == id)).scalar()
-        ficha_aluno_c = db.session.execute(db.select(Ficha_C).filter(Ficha_C.id == id)).scalar()
-        serie_rep_c = db.session.execute(db.select(Serie_Reps_C).filter(Serie_Reps_C.id == id)).scalar()
+        dados_aluno = Dados_alunos.query.get_or_404(id)
+        ficha_aluno_a = Ficha_A.query.filter_by(user_id=id).first()
+        serie_rep_a = Serie_Reps_A.query.filter_by(user_id=id).first()
+        ficha_aluno_b = Ficha_B.query.filter_by(user_id=id).first()
+        serie_rep_b = Serie_Reps_B.query.filter_by(user_id=id).first()
+        ficha_aluno_c = Ficha_C.query.filter_by(user_id=id).first()
+        serie_rep_c = Serie_Reps_C.query.filter_by(user_id=id).first()
         
         return render_template("editar_dados.htm", dados_aluno=dados_aluno, ficha_aluno_a=ficha_aluno_a, serie_rep_a=serie_rep_a,
                                                                             ficha_aluno_b=ficha_aluno_b, serie_rep_b=serie_rep_b,
                                                                             ficha_aluno_c=ficha_aluno_c, serie_rep_c=serie_rep_c)
     
 @app.route("/deletar_dados/<int:id>")
+@login_required
 def deletar_dados(id):
-    dados_aluno = db.session.execute(db.select(Dados_alunos).filter(Dados_alunos.id == id)).scalar()
-    ficha_aluno_a = db.session.execute(db.select(Ficha_A).filter(Ficha_A.id == id)).scalar()
-    serie_rep_a = db.session.execute(db.select(Serie_Reps_A).filter(Serie_Reps_A.id == id)).scalar()
-    ficha_aluno_b = db.session.execute(db.select(Ficha_B).filter(Ficha_B.id == id)).scalar()
-    serie_rep_b = db.session.execute(db.select(Serie_Reps_B).filter(Serie_Reps_B.id == id)).scalar()
-    ficha_aluno_c = db.session.execute(db.select(Ficha_C).filter(Ficha_C.id == id)).scalar()
-    serie_rep_c = db.session.execute(db.select(Serie_Reps_C).filter(Serie_Reps_C.id == id)).scalar()
+    if current_user.role != 'admin':
+        abort(403)
     
-    db.session.delete(dados_aluno)
-    db.session.delete(ficha_aluno_a)
-    db.session.delete(serie_rep_a)
-    db.session.delete(ficha_aluno_b)
-    db.session.delete(serie_rep_b)
-    db.session.delete(ficha_aluno_c)
-    db.session.delete(serie_rep_c)
+    if current_user.id == id:
+        return redirect(url_for('alunos'))
+
+    Ficha_A.query.filter_by(user_id=id).delete()
+    Serie_Reps_A.query.filter_by(user_id=id).delete()
+    Ficha_B.query.filter_by(user_id=id).delete()
+    Serie_Reps_B.query.filter_by(user_id=id).delete()
+    Ficha_C.query.filter_by(user_id=id).delete()
+    Serie_Reps_C.query.filter_by(user_id=id).delete()
+
+    dados_aluno = Dados_alunos.query.get(id)
+    if dados_aluno:
+        db.session.delete(dados_aluno)
+    
     db.session.commit()
-    return redirect("/alunos")
+    
+    return redirect(url_for('alunos'))
