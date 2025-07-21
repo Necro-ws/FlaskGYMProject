@@ -19,6 +19,8 @@ Gerenciamento de Alunos: Pode cadastrar, visualizar, editar e excluir qualquer a
 
 Gerenciamento de Fichas: Cria e edita as fichas de treino (A, B, C) para todos os alunos.
 
+Gerenciamento de Senha: Permissão para editar seus próprios dados e alterar a própria senha.
+
 Pesquisa: Ferramenta de busca para encontrar alunos rapidamente.
 
 Permissões de Aluno
@@ -26,7 +28,7 @@ Acesso Restrito: Um aluno só pode visualizar e interagir com seus próprios dad
 
 Visualização de Ficha: Acesso direto à sua ficha de treino detalhada após o login.
 
-Edição de Dados: Permissão para editar suas próprias informações pessoais e de treino.
+Edição de Dados: Permissão para editar suas próprias informações pessoais, treinos e alterar sua senha.
 
 Como Instalar e Executar
 Siga os passos abaixo para configurar e executar o projeto em sua máquina local.
@@ -43,8 +45,6 @@ cd SEU_REPOSITORIO
 (Lembre-se de substituir SEU_USUARIO e SEU_REPOSITORIO)
 
 2. Crie e Ative um Ambiente Virtual
-É altamente recomendado usar um ambiente virtual para isolar as dependências.
-
 No Windows:
 
 python -m venv venv
@@ -56,41 +56,35 @@ python3 -m venv venv
 source venv/bin/activate
 
 3. Instale as Dependências
-Com o ambiente virtual ativado, instale todas as bibliotecas necessárias:
-
 pip install -r requirements.txt
 
 4. Crie o Primeiro Usuário Administrador (Passo Obrigatório)
-Como agora apenas administradores podem criar novos usuários, o primeiro admin precisa ser criado manualmente. Use o script fornecido para isso.
-
-No terminal, com o ambiente virtual ativado, execute:
+Execute o script fornecido para criar o primeiro usuário com permissões de administrador.
 
 python create_admin.py
 
-O script pedirá que você digite um email e uma senha para o novo administrador. Siga as instruções. Este comando também criará o arquivo de banco de dados datasave.db na primeira vez.
+O script pedirá que você digite um email e uma senha. Siga as instruções.
 
 5. Execute a Aplicação
-Após criar o admin, inicie o servidor Flask:
-
 python run.py
 
-O servidor será iniciado! Acesse em seu navegador o endereço http://127.0.0.1:5000/. Use as credenciais do admin que você acabou de criar para fazer o login.
+Acesse http://127.0.0.1:5000/ em seu navegador e faça login com as credenciais do admin que você acabou de criar.
 
 Tecnologias Usadas
 Backend:
 
-Flask: Micro-framework web para Python.
+Flask
 
-Flask-SQLAlchemy: Extensão para manipulação do banco de dados com ORM.
+Flask-SQLAlchemy
 
-Flask-Login: Gerenciamento de sessões de usuário e autenticação.
+Flask-Login
 
-Werkzeug: Para hashing seguro de senhas.
+Werkzeug
 
-SQLite: Banco de dados leve e baseado em arquivo.
+SQLite
 
 Frontend:
 
-HTML5 com Jinja2 para templates dinâmicos.
+HTML5 com Jinja2
 
-Bootstrap 5: Framework CSS para estilização e responsividade.
+Bootstrap 5
