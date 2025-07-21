@@ -18,9 +18,9 @@
                 <div class="col-md-6">
                     <label for="idade" class="form-label">Idade</label>
                     <input type="text" class="form-control" name="idade" value="{{dados_aluno.idade}}" required>
-                    <br>
                 </div>
-                <hr>
+            </div>
+            <div class="row mt-3">
                 <div class="col-md-6">
                     <label for="peso" class="form-label">Peso</label>
                     <input type="text" class="form-control" name="peso" value="{{dados_aluno.peso}}" required>
@@ -28,211 +28,197 @@
                 <div class="col-md-6">
                     <label for="altura" class="form-label">Altura</label>
                     <input type="text" class="form-control" name="altura" value="{{dados_aluno.altura}}" required>
-                    <br>
                 </div>
-                <hr>
             </div>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 mt-3">
             <label for="objetivo" class="form-label">Objetivo</label>
-            <textarea class="form-control" name="objetivo" rows="2" required>{{dados_aluno.objetivo}}</textarea>
+            <textarea class="form-control" name="objetivo" rows="2"
+                required>{{dados_aluno.objetivo}}</textarea>
         </div>
-        <br>
+        
         <div class="d-flex justify-content-center">
             <h3>Ficha A</h3>
         </div>
         <hr>
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_1_a" class="form-label">Exercicio 1</label>
-                    <input type="text" class="form-control" name="ex_1_a" value="{{ficha_aluno_a.ex_1}}">
+                    <input type="text" class="form-control" name="ex_1_a" value="{{ ficha_aluno_a.ex_1 if ficha_aluno_a else '' }}">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_2_a" class="form-label">Exercicio 2</label>
-                    <input type="text" class="form-control" name="ex_2_a" value="{{ficha_aluno_a.ex_2}}">
-                    <br>
+                    <input type="text" class="form-control" name="ex_2_a" value="{{ ficha_aluno_a.ex_2 if ficha_aluno_a else '' }}">
                 </div>
-                <hr>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_3_a" class="form-label">Exercicio 3</label>
-                    <input type="text" class="form-control" name="ex_3_a" value="{{ficha_aluno_a.ex_3}}">
+                    <input type="text" class="form-control" name="ex_3_a" value="{{ ficha_aluno_a.ex_3 if ficha_aluno_a else '' }}">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_4_a" class="form-label">Exercicio 4</label>
-                    <input type="text" class="form-control" name="ex_4_a" value="{{ficha_aluno_a.ex_4}}">
-                    <br>
+                    <input type="text" class="form-control" name="ex_4_a" value="{{ ficha_aluno_a.ex_4 if ficha_aluno_a else '' }}">
                 </div>
-                <hr>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_5_a" class="form-label">Exercicio 5</label>
-                    <input type="text" class="form-control" name="ex_5_a" value="{{ficha_aluno_a.ex_5}}">
+                    <input type="text" class="form-control" name="ex_5_a" value="{{ ficha_aluno_a.ex_5 if ficha_aluno_a else '' }}">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_6_a" class="form-label">Exercicio 6</label>
-                    <input type="text" class="form-control" name="ex_6_a" value="{{ficha_aluno_a.ex_6}}">
-                    <br>
+                    <input type="text" class="form-control" name="ex_6_a" value="{{ ficha_aluno_a.ex_6 if ficha_aluno_a else '' }}">
                 </div>
-                <hr>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_7_a" class="form-label">Exercicio 7</label>
-                    <input type="text" class="form-control" name="ex_7_a" value="{{ficha_aluno_a.ex_7}}">
+                    <input type="text" class="form-control" name="ex_7_a" value="{{ ficha_aluno_a.ex_7 if ficha_aluno_a else '' }}">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_8_a" class="form-label">Exercicio 8</label>
-                    <input type="text" class="form-control" name="ex_8_a" value="{{ficha_aluno_a.ex_8}}">
-                    <br>
+                    <input type="text" class="form-control" name="ex_8_a" value="{{ ficha_aluno_a.ex_8 if ficha_aluno_a else '' }}">
                 </div>
-                <hr>
-                <div class="col-md-12">
-                    <div class="d-flex justify-content-center">
-                        <div style="margin-right: 5%;" class="col-md-3">
-                            <label for="series_a" class="form-label">Series</label>
-                            <input type="text" class="form-control" name="series_a" value="{{serie_rep_a.serie_A}}"
-                                required>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="repeticoes_a" class="form-label">Repetições</label>
-                            <input type="text" class="form-control" name="repeticoes_a"
-                                value="{{serie_rep_a.repeticoes_A}}" required>
-                        </div>
-                    </div>
-                    <br>
+            </div>
+            <div class="row mt-3 justify-content-center">
+                <div class="col-md-3">
+                    <label for="series_a" class="form-label">Series</label>
+                    <input type="text" class="form-control" name="series_a" value="{{ serie_rep_a.serie_A if serie_rep_a else '' }}">
+                </div>
+                <div class="col-md-3">
+                    <label for="repeticoes_a" class="form-label">Repetições</label>
+                    <input type="text" class="form-control" name="repeticoes_a" value="{{ serie_rep_a.repeticoes_A if serie_rep_a else '' }}">
                 </div>
             </div>
         </div>
         <hr>
+        
         <div class="d-flex justify-content-center">
             <h3>Ficha B</h3>
         </div>
         <hr>
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_1_b" class="form-label">Exercicio 1</label>
-                    <input type="text" class="form-control" name="ex_1_b" value="{{ficha_aluno_b.ex_1}}">
+                    <input type="text" class="form-control" name="ex_1_b" value="{{ ficha_aluno_b.ex_1 if ficha_aluno_b else '' }}">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_2_b" class="form-label">Exercicio 2</label>
-                    <input type="text" class="form-control" name="ex_2_b" value="{{ficha_aluno_b.ex_2}}">
-                    <br>
+                    <input type="text" class="form-control" name="ex_2_b" value="{{ ficha_aluno_b.ex_2 if ficha_aluno_b else '' }}">
                 </div>
-                <hr>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_3_b" class="form-label">Exercicio 3</label>
-                    <input type="text" class="form-control" name="ex_3_b" value="{{ficha_aluno_b.ex_3}}">
+                    <input type="text" class="form-control" name="ex_3_b" value="{{ ficha_aluno_b.ex_3 if ficha_aluno_b else '' }}">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_4_b" class="form-label">Exercicio 4</label>
-                    <input type="text" class="form-control" name="ex_4_b" value="{{ficha_aluno_b.ex_4}}">
-                    <br>
+                    <input type="text" class="form-control" name="ex_4_b" value="{{ ficha_aluno_b.ex_4 if ficha_aluno_b else '' }}">
                 </div>
-                <hr>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_5_b" class="form-label">Exercicio 5</label>
-                    <input type="text" class="form-control" name="ex_5_b" value="{{ficha_aluno_b.ex_5}}">
+                    <input type="text" class="form-control" name="ex_5_b" value="{{ ficha_aluno_b.ex_5 if ficha_aluno_b else '' }}">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_6_b" class="form-label">Exercicio 6</label>
-                    <input type="text" class="form-control" name="ex_6_b" value="{{ficha_aluno_b.ex_6}}">
-                    <br>
+                    <input type="text" class="form-control" name="ex_6_b" value="{{ ficha_aluno_b.ex_6 if ficha_aluno_b else '' }}">
                 </div>
-                <hr>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_7_b" class="form-label">Exercicio 7</label>
-                    <input type="text" class="form-control" name="ex_7_b" value="{{ficha_aluno_b.ex_7}}">
+                    <input type="text" class="form-control" name="ex_7_b" value="{{ ficha_aluno_b.ex_7 if ficha_aluno_b else '' }}">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_8_b" class="form-label">Exercicio 8</label>
-                    <input type="text" class="form-control" name="ex_8_b" value="{{ficha_aluno_b.ex_8}}">
-                    <br>
+                    <input type="text" class="form-control" name="ex_8_b" value="{{ ficha_aluno_b.ex_8 if ficha_aluno_b else '' }}">
                 </div>
-                <hr>
-                <div class="col-md-12">
-                    <div class="d-flex justify-content-center">
-                        <div style="margin-right: 5%;" class="col-md-3">
-                            <label for="series_b" class="form-label">Series</label>
-                            <input type="text" class="form-control" name="series_b" value="{{serie_rep_b.serie_B}}"
-                                required>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="repeticoes_b" class="form-label">Repetições</label>
-                            <input type="text" class="form-control" name="repeticoes_b"
-                                value="{{serie_rep_b.repeticoes_B}}" required>
-                        </div>
-                    </div>
-                    <br>
+            </div>
+            <div class="row mt-3 justify-content-center">
+                <div class="col-md-3">
+                    <label for="series_b" class="form-label">Series</label>
+                    <input type="text" class="form-control" name="series_b" value="{{ serie_rep_b.serie_B if serie_rep_b else '' }}">
+                </div>
+                <div class="col-md-3">
+                    <label for="repeticoes_b" class="form-label">Repetições</label>
+                    <input type="text" class="form-control" name="repeticoes_b" value="{{ serie_rep_b.repeticoes_B if serie_rep_b else '' }}">
                 </div>
             </div>
         </div>
         <hr>
+
         <div class="d-flex justify-content-center">
             <h3>Ficha C</h3>
         </div>
         <hr>
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_1_c" class="form-label">Exercicio 1</label>
-                    <input type="text" class="form-control" name="ex_1_c" value="{{ficha_aluno_c.ex_1}}">
+                    <input type="text" class="form-control" name="ex_1_c" value="{{ ficha_aluno_c.ex_1 if ficha_aluno_c else '' }}">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_2_c" class="form-label">Exercicio 2</label>
-                    <input type="text" class="form-control" name="ex_2_c" value="{{ficha_aluno_c.ex_2}}">
-                    <br>
+                    <input type="text" class="form-control" name="ex_2_c" value="{{ ficha_aluno_c.ex_2 if ficha_aluno_c else '' }}">
                 </div>
-                <hr>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_3_c" class="form-label">Exercicio 3</label>
-                    <input type="text" class="form-control" name="ex_3_c" value="{{ficha_aluno_c.ex_3}}">
+                    <input type="text" class="form-control" name="ex_3_c" value="{{ ficha_aluno_c.ex_3 if ficha_aluno_c else '' }}">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_4_c" class="form-label">Exercicio 4</label>
-                    <input type="text" class="form-control" name="ex_4_c" value="{{ficha_aluno_c.ex_4}}">
-                    <br>
+                    <input type="text" class="form-control" name="ex_4_c" value="{{ ficha_aluno_c.ex_4 if ficha_aluno_c else '' }}">
                 </div>
-                <hr>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_5_c" class="form-label">Exercicio 5</label>
-                    <input type="text" class="form-control" name="ex_5_c" value="{{ficha_aluno_c.ex_5}}">
+                    <input type="text" class="form-control" name="ex_5_c" value="{{ ficha_aluno_c.ex_5 if ficha_aluno_c else '' }}">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_6_c" class="form-label">Exercicio 6</label>
-                    <input type="text" class="form-control" name="ex_6_c" value="{{ficha_aluno_c.ex_6}}">
-                    <br>
+                    <input type="text" class="form-control" name="ex_6_c" value="{{ ficha_aluno_c.ex_6 if ficha_aluno_c else '' }}">
                 </div>
-                <hr>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_7_c" class="form-label">Exercicio 7</label>
-                    <input type="text" class="form-control" name="ex_7_c" value="{{ficha_aluno_c.ex_7}}">
+                    <input type="text" class="form-control" name="ex_7_c" value="{{ ficha_aluno_c.ex_7 if ficha_aluno_c else '' }}">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <label for="ex_8_c" class="form-label">Exercicio 8</label>
-                    <input type="text" class="form-control" name="ex_8_c" value="{{ficha_aluno_c.ex_8}}">
-                    <br>
+                    <input type="text" class="form-control" name="ex_8_c" value="{{ ficha_aluno_c.ex_8 if ficha_aluno_c else '' }}">
                 </div>
-                <hr>
-                <div class="col-md-12">
-                    <div class="d-flex justify-content-center">
-                        <div style="margin-right: 5%;" class="col-md-3">
-                            <label for="series_c" class="form-label">Series</label>
-                            <input type="text" class="form-control" name="series_c" value="{{serie_rep_c.serie_C}}"
-                                required>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="repeticoes_c" class="form-label">Repetições</label>
-                            <input type="text" class="form-control" name="repeticoes_c"
-                                value="{{serie_rep_c.repeticoes_C}}" required>
-                        </div>
-                    </div>
-                    <br>
+            </div>
+            <div class="row mt-3 justify-content-center">
+                <div class="col-md-3">
+                    <label for="series_c" class="form-label">Series</label>
+                    <input type="text" class="form-control" name="series_c" value="{{ serie_rep_c.serie_C if serie_rep_c else '' }}">
                 </div>
-                <div class="d-flex justify-content-center">
-                    <input class="btn btn-primary col-md-6" type="submit" value="Salvar Dados">
+                <div class="col-md-3">
+                    <label for="repeticoes_c" class="form-label">Repetições</label>
+                    <input type="text" class="form-control" name="repeticoes_c" value="{{ serie_rep_c.repeticoes_C if serie_rep_c else '' }}">
                 </div>
             </div>
         </div>
+        <hr>
+        <hr>
+        <div class="d-flex justify-content-center">
+            <h3>Trocar Senha (opcional)</h3>
+        </div>
+        <p class="text-center text-muted">Preencha os campos abaixo somente se desejar alterar sua senha.</p>
+        <hr>
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <label for="nova_senha" class="form-label">Nova Senha</label>
+                <input type="password" class="form-control" name="nova_senha">
+            </div>
+            <div class="col-md-4">
+                <label for="confirmar_senha" class="form-label">Confirmar Nova Senha</label>
+                <input type="password" class="form-control" name="confirmar_senha">
+            </div>
+        </div>
+        <br>
+
+        <div class="d-flex justify-content-center">
+            <input class="btn btn-primary col-md-6" type="submit" value="Salvar Dados">
+        </div>
         <br>
     </form>
+    {% if status and status.type == 'erro' %}
+    <div class="alert alert-danger d-flex justify-content-center mt-3" role="alert">
+        {{ status.message }}
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

@@ -1,7 +1,8 @@
-from flask import render_template, request, redirect, Blueprint, url_for, abort
 from academia_app import db
+from flask import render_template, request, redirect, url_for, abort
 from .models import Dados_alunos, Ficha_A, Serie_Reps_A, Ficha_B, Serie_Reps_B, Ficha_C, Serie_Reps_C
 from flask import current_app as app
+
 from flask_login import login_user, logout_user, login_required, current_user
 
 @app.route("/")
@@ -51,6 +52,8 @@ def fichas_alunos(id):
     if current_user.role != 'admin' and current_user.id != id:
         abort(403)
 
+    aluno = Dados_alunos.query.get_or_404(id)
+
     ficha_aluno_a = Ficha_A.query.filter_by(user_id=id).first()
     serie_rep_a = Serie_Reps_A.query.filter_by(user_id=id).first()
     ficha_aluno_b = Ficha_B.query.filter_by(user_id=id).first()
@@ -59,6 +62,7 @@ def fichas_alunos(id):
     serie_rep_c = Serie_Reps_C.query.filter_by(user_id=id).first()
 
     return render_template("ficha.htm", 
+                           aluno=aluno,
                            ficha_aluno_a=ficha_aluno_a, serie_rep_a=serie_rep_a,
                            ficha_aluno_b=ficha_aluno_b, serie_rep_b=serie_rep_b,
                            ficha_aluno_c=ficha_aluno_c, serie_rep_c=serie_rep_c)
@@ -111,16 +115,31 @@ def editar_dados(id):
     if current_user.role != 'admin' and current_user.id != id:
         abort(403)
 
+    aluno = Dados_alunos.query.get_or_404(id)
+
     if request.method == 'POST':
         dados_editados = request.form
-        
-        aluno = Dados_alunos.query.get(id)
-        ficha_a = Ficha_A.query.filter_by(user_id=id).first()
-        serie_rep_a = Serie_Reps_A.query.filter_by(user_id=id).first()
-        ficha_b = Ficha_B.query.filter_by(user_id=id).first()
-        serie_rep_b = Serie_Reps_B.query.filter_by(user_id=id).first()
-        ficha_c = Ficha_C.query.filter_by(user_id=id).first()
-        serie_rep_c = Serie_Reps_C.query.filter_by(user_id=id).first()
+    
+        nova_senha = dados_editados.get('nova_senha')
+        confirmar_senha = dados_editados.get('confirmar_senha')
+
+        if nova_senha:
+            if nova_senha != confirmar_senha:
+                status = {"type": "erro", "message": "As novas senhas não coincidem. Nenhuma alteração foi salva."}
+    
+                ficha_aluno_a = Ficha_A.query.filter_by(user_id=id).first()
+                serie_rep_a = Serie_Reps_A.query.filter_by(user_id=id).first()
+                ficha_aluno_b = Ficha_B.query.filter_by(user_id=id).first()
+                serie_rep_b = Serie_Reps_B.query.filter_by(user_id=id).first()
+                ficha_aluno_c = Ficha_C.query.filter_by(user_id=id).first()
+                serie_rep_c = Serie_Reps_C.query.filter_by(user_id=id).first()
+
+                return render_template("editar_dados.htm", status=status,
+                                       dados_aluno=aluno, ficha_aluno_a=ficha_aluno_a, serie_rep_a=serie_rep_a,
+                                       ficha_aluno_b=ficha_aluno_b, serie_rep_b=serie_rep_b,
+                                       ficha_aluno_c=ficha_aluno_c, serie_rep_c=serie_rep_c)
+            else:
+                aluno.set_password(nova_senha)
 
         aluno.nome = dados_editados["nome"]
         aluno.idade = dados_editados["idade"]
@@ -128,6 +147,10 @@ def editar_dados(id):
         aluno.altura = dados_editados["altura"]
         aluno.objetivo = dados_editados["objetivo"]
 
+        ficha_a = Ficha_A.query.filter_by(user_id=id).first()
+        if not ficha_a:
+            ficha_a = Ficha_A(user_id=id)
+            db.session.add(ficha_a)
         ficha_a.ex_1 = dados_editados["ex_1_a"]
         ficha_a.ex_2 = dados_editados["ex_2_a"]
         ficha_a.ex_3 = dados_editados["ex_3_a"]
@@ -137,9 +160,17 @@ def editar_dados(id):
         ficha_a.ex_7 = dados_editados["ex_7_a"]
         ficha_a.ex_8 = dados_editados["ex_8_a"]
 
+        serie_rep_a = Serie_Reps_A.query.filter_by(user_id=id).first()
+        if not serie_rep_a:
+            serie_rep_a = Serie_Reps_A(user_id=id)
+            db.session.add(serie_rep_a)
         serie_rep_a.serie_A = dados_editados["series_a"]
         serie_rep_a.repeticoes_A = dados_editados["repeticoes_a"]
-
+        
+        ficha_b = Ficha_B.query.filter_by(user_id=id).first()
+        if not ficha_b:
+            ficha_b = Ficha_B(user_id=id)
+            db.session.add(ficha_b)
         ficha_b.ex_1 = dados_editados["ex_1_b"]
         ficha_b.ex_2 = dados_editados["ex_2_b"]
         ficha_b.ex_3 = dados_editados["ex_3_b"]
@@ -149,9 +180,17 @@ def editar_dados(id):
         ficha_b.ex_7 = dados_editados["ex_7_b"]
         ficha_b.ex_8 = dados_editados["ex_8_b"]
 
+        serie_rep_b = Serie_Reps_B.query.filter_by(user_id=id).first()
+        if not serie_rep_b:
+            serie_rep_b = Serie_Reps_B(user_id=id)
+            db.session.add(serie_rep_b)
         serie_rep_b.serie_B = dados_editados["series_b"]
         serie_rep_b.repeticoes_B = dados_editados["repeticoes_b"]
 
+        ficha_c = Ficha_C.query.filter_by(user_id=id).first()
+        if not ficha_c:
+            ficha_c = Ficha_C(user_id=id)
+            db.session.add(ficha_c)
         ficha_c.ex_1 = dados_editados["ex_1_c"]
         ficha_c.ex_2 = dados_editados["ex_2_c"]
         ficha_c.ex_3 = dados_editados["ex_3_c"]
@@ -161,14 +200,21 @@ def editar_dados(id):
         ficha_c.ex_7 = dados_editados["ex_7_c"]
         ficha_c.ex_8 = dados_editados["ex_8_c"]
 
+        serie_rep_c = Serie_Reps_C.query.filter_by(user_id=id).first()
+        if not serie_rep_c:
+            serie_rep_c = Serie_Reps_C(user_id=id)
+            db.session.add(serie_rep_c)
         serie_rep_c.serie_C = dados_editados["series_c"]
         serie_rep_c.repeticoes_C = dados_editados["repeticoes_c"]
-
+        
         db.session.commit()
-        return redirect("/alunos")
+
+        if current_user.role == 'admin':
+            return redirect(url_for('alunos'))
+        else:
+            return redirect(url_for('fichas_alunos', id=id))
 
     else:
-        dados_aluno = Dados_alunos.query.get_or_404(id)
         ficha_aluno_a = Ficha_A.query.filter_by(user_id=id).first()
         serie_rep_a = Serie_Reps_A.query.filter_by(user_id=id).first()
         ficha_aluno_b = Ficha_B.query.filter_by(user_id=id).first()
@@ -176,9 +222,10 @@ def editar_dados(id):
         ficha_aluno_c = Ficha_C.query.filter_by(user_id=id).first()
         serie_rep_c = Serie_Reps_C.query.filter_by(user_id=id).first()
         
-        return render_template("editar_dados.htm", dados_aluno=dados_aluno, ficha_aluno_a=ficha_aluno_a, serie_rep_a=serie_rep_a,
-                                                                            ficha_aluno_b=ficha_aluno_b, serie_rep_b=serie_rep_b,
-                                                                            ficha_aluno_c=ficha_aluno_c, serie_rep_c=serie_rep_c)
+        return render_template("editar_dados.htm", 
+                               dados_aluno=aluno, ficha_aluno_a=ficha_aluno_a, serie_rep_a=serie_rep_a,
+                               ficha_aluno_b=ficha_aluno_b, serie_rep_b=serie_rep_b,
+                               ficha_aluno_c=ficha_aluno_c, serie_rep_c=serie_rep_c)
     
 @app.route("/deletar_dados/<int:id>")
 @login_required
